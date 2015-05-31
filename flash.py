@@ -20,14 +20,21 @@ def serve_pil_image(pil_img):
 
 def build(rr, f, o):
     new_im = Image.new('RGB', (116 * 5 - 104, 116 * 6 - 72))
+    ver = 1
+    last_img = None
 
     for x in xrange(0, 5):
-        for y in xrange(0, 6):
-            URL = ("http://images1.flashphotography.com/Magnifier/" +
+        y = 0
+        while y < 6:
+            URL = ("http://images{5}.flashphotography.com/Magnifier/" +
                    "MagnifyRender.ashx?X={0}&Y={1}&O={2}&R={3}&F={4}&A=0")
-            url = URL.format(60 + 116 * x, 60 + 116 * y, o, rr, f)
+            url = URL.format(60 + 116 * x, 60 + 116 * y, o, rr, f, ver)
             file = cStringIO.StringIO(urllib.urlopen(url).read())
             img = Image.open(file)
+            if img == last_img and x == 0 and ver == 1:
+                ver = 2
+                y = 0
+                continue
             w, h = img.size
             nw = nh = 116
             l = (w - nw) / 2
@@ -36,6 +43,8 @@ def build(rr, f, o):
             b = (h + nh) / 2
             nimg = img.crop((l, t, r, b))
             new_im.paste(nimg, (116 * x, 116 * y))
+            last_img = img
+            y += 1
 
     return new_im
 
