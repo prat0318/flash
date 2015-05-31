@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html><head>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form id="form" method="POST" action="/" class="form-horizontal" style="text-align:center">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Enter your FlashPhotography URL :</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label for="url" class="col-md-4 control-label"></label>  
+  <div class="col-md-4">
+  <input type="text" class="form-control input-md" value="http://orders.flashphotography.com/Orders/Packages.aspx?O=26823230&R=00001&F=3_fireworks&EventID=1673207" name="url" id="url">
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label for="" class="col-md-4 control-label"></label>
+  <div class="col-md-4">
+    <button class="btn btn-primary" name="" id="" type="submit">Show Me!</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+<div id="loading" style="text-align: center; display: none"><img alt="" src="http://melauspartners.com/ajax-loading-gif-transparent-219.gif"/></div>
+<div id="result" style="text-align: center"></div>
+<div id="footer"><i>This project is created just for fun purposes. Please buy the photos from <a href="http://flashphotography.com">flashphotography.com</a> website.</i></div>
+<script>
+$(document).ajaxStart(function () {
+    $('#loading').show();  // show loading indicator
+});
+
+$(document).ajaxStop(function() 
+{
+    $('#loading').hide();  // hide loading indicator
+});
+// Attach a submit handler to the form
+$( "#form" ).submit(function( event ) {
+ 
+  // Stop form from submitting normally
+  event.preventDefault();
+ 
+  // Get some values from elements on the page:
+  var $form = $( this ),
+    url = $form.find( "input[name='url']" ).val(),
+    action = $form.attr( "action" );
+ 
+  // Send the data using post
+  var posting = $.post( action, { url: url } );
+ 
+  // Put the results in a div
+  posting.done(function( data ) {
+    $('#result').html('<img src="data:image/jpeg;base64,' + data + '" />');
+  })
+  .fail(function(request, status, error) {
+    alert(request.responseText);
+  });
+});
+</script>
+<style>
+    #footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0px;
+        height: 26px; /* footer height if any */
+    }
+</style>
+
+</body></html>
